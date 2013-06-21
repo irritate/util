@@ -13,33 +13,37 @@ enum LogLevels
     DEBUG
 };
 
-static LogLevels DefaultLoggingLevel = LogLevels.DEBUG;
-private bool IsLoggingEnabled(LogLevels level) { return level <= DefaultLoggingLevel ? true : false; }  
+mixin DefineLoggers;
+enum DefaultLoggingLevel = LogLevels.DEBUG;
 
-//! Try to get rid of our boilerplate code with this
-mixin template InternalLogger(alias level)
+private bool IsLoggingEnabled(LogLevels level)() { return level <= DefaultLoggingLevel ? true : false; } 
+
+mixin template DefineLoggers()
 {
-    void func(T, A...)(T t, A a)
+    mixin DefineLoggers!(EnumMembers!LogLevels);
+}
+
+mixin template DefineLoggers(T...)
+{
+    mixin(DefineLogger!(to!string(T[0])));
+    static if (T.length > 1)
     {
-        if (IsLoggingEnabled(level))
-        {
-            auto prefix = format("[%s][%s]\t%s", to!string(level), Clock.currTime.opCast!(TimeOfDay).toString(), t);
-            writefln(prefix, a);
-        }
+        mixin DefineLoggers!(T[1..$]);
     }
 }
 
-mixin InternalLogger!(LogLevels.ERROR) Error;
-alias Error.func ERROR;
-
-mixin InternalLogger!(LogLevels.WARNING) Warning;
-alias Warning.func WARNING;
-
-mixin InternalLogger!(LogLevels.INFO) Info;
-alias Info.func INFO;
-
-mixin InternalLogger!(LogLevels.DEBUG) Debug;
-alias Debug.func DEBUG;
+template DefineLogger(string level)
+{
+    const char[] DefineLogger = 
+        "void " ~ level ~ "(T, A...)(T t, A a)
+        {
+            static if (IsLoggingEnabled!(LogLevels." ~ level ~ `))
+            {
+                auto prefix = format("[` ~ level ~ `][%s]\t%s", Clock.currTime.opCast!(TimeOfDay).toString(), t);
+                writefln(prefix, a);
+            }
+        }`;
+}
 
 unittest
 {
