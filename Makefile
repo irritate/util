@@ -1,10 +1,10 @@
 #!/usr/bin/make
 
 # Global
-export DC 			= dmd
-export DCFLAGS 		= -gc -w -de -unittest
-export LIB_FLAG 	= -lib
-export DLINK 		= -map
+export DC           = dmd
+export DCFLAGS      = -gc -w -de -unittest
+export LIB_FLAG     = -lib
+export DLINK        = -map
 
 UNAME = $(shell uname)
 ifeq ($(UNAME), Darwin)
@@ -18,26 +18,26 @@ else
 endif
 
 # Local defines
-BUILD_DIR 			= build
-SRC 				= main.d
-OBJS_UNIX 			= $(patsubst %.d, $(BUILD_DIR)/%$(OBJ_TYPE), $(notdir $(SRC)))
-OBJS_OS 			= $(patsubst %.d, $(BUILD_DIR)$(PATH_SEP)%$(OBJ_TYPE), $(SRC))
+BUILD_DIR           = build
+SRC                 = main.d
+OBJS_UNIX           = $(patsubst %.d, $(BUILD_DIR)/%$(OBJ_TYPE), $(notdir $(SRC)))
+OBJS_OS             = $(patsubst %.d, $(BUILD_DIR)$(PATH_SEP)%$(OBJ_TYPE), $(SRC))
 
 # List the name of the libraries you want to link
-LIB_NAMES 			= Core
+LIB_NAMES           = Core
 
 # Check to see if we are linking in any static libs
 # Handles the case where we don't link anything
 ifneq ($(strip $(LIB_NAMES)),)
-	LIBS 			= $(addsuffix $(LIB_TYPE), $(addprefix $(BUILD_DIR)$(PATH_SEP), $(LIB_NAMES)))
+	LIBS            = $(addsuffix $(LIB_TYPE), $(addprefix $(BUILD_DIR)$(PATH_SEP), $(LIB_NAMES)))
 else
-	LIBS 			=
+	LIBS            =
 endif
 
-EXE 				= $(notdir $(CURDIR))
-RM 					= rm -rf
-MAP 				= $(EXE).map
-MAKE 				= make
+EXE                 = $(notdir $(CURDIR))
+RM                  = rm -rf
+MAP                 = $(EXE).map
+MAKE                = make
 
 # Rules
 .PHONY: $(LIB_NAMES)
