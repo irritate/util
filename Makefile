@@ -8,13 +8,13 @@ export DLINK        = -map
 
 UNAME = $(shell uname)
 ifeq ($(UNAME), Darwin)
-	export OBJ_TYPE = .o
-	export LIB_TYPE = .a
-	export PATH_SEP = /
+    export OBJ_TYPE = .o
+    export LIB_TYPE = .a
+    export PATH_SEP = /
 else
-	export OBJ_TYPE = .obj
-	export LIB_TYPE = .lib
-	export PATH_SEP = \\
+    export OBJ_TYPE = .obj
+    export LIB_TYPE = .lib
+    export PATH_SEP = \\
 endif
 
 # Local defines
@@ -29,9 +29,9 @@ LIB_NAMES           = Core
 # Check to see if we are linking in any static libs
 # Handles the case where we don't link anything
 ifneq ($(strip $(LIB_NAMES)),)
-	LIBS            = $(addsuffix $(LIB_TYPE), $(addprefix $(BUILD_DIR)$(PATH_SEP), $(LIB_NAMES)))
+    LIBS            = $(addsuffix $(LIB_TYPE), $(addprefix $(BUILD_DIR)$(PATH_SEP), $(LIB_NAMES)))
 else
-	LIBS            =
+    LIBS            =
 endif
 
 EXE                 = $(notdir $(CURDIR))
