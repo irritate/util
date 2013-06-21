@@ -4,6 +4,7 @@ import std.stdio;
 import std.datetime;
 import std.string;
 import std.conv;
+import std.traits;
 
 enum LogLevels
 {
