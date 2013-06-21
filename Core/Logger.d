@@ -1,11 +1,11 @@
 module Logger;
 
 import std.array;
-import std.stdio;
-import std.datetime;
 import std.conv;
-import std.traits;
+import std.datetime;
 import std.format;
+import std.stdio;
+import std.traits;
 
 enum LogLevels
 {
