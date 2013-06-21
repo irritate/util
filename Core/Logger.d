@@ -1,10 +1,11 @@
 module Logger;
 
+import std.array;
 import std.stdio;
 import std.datetime;
-import std.string;
 import std.conv;
 import std.traits;
+import std.format;
 
 enum LogLevels
 {
@@ -40,8 +41,9 @@ template DefineLogger(string level)
         {
             static if (IsLoggingEnabled!(LogLevels." ~ level ~ `))
             {
-                auto prefix = format("[` ~ level ~ `][%s]\t%s", Clock.currTime.opCast!(TimeOfDay).toString(), t);
-                writefln(prefix, a);
+                auto writer = appender!string();
+                formattedWrite(writer, "[` ~ level ~ `][%s]\t%s", Clock.currTime.opCast!(TimeOfDay).toString(), t);
+                writefln(writer.data, a);
             }
         }`;
 }
